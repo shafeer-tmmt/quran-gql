@@ -1,0 +1,334 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ChapterInfo {
+  chapter_id: Float
+  text: String
+  short_text: String
+  language_name: String
+  source: String
+}
+
+type ChapterInfoResponse {
+  success: Boolean!
+  message: String
+  chapterInfo: ChapterInfo
+}
+
+type Chapter {
+  id: Float
+  chapter_number: Float
+  bismillah_pre: Boolean
+  revelation_order: Float
+  revelation_place: String
+  name_complex: String
+  name_arabic: String
+  verses_count: Float
+  pages: [Float!]
+  name_simple: String
+}
+
+type GetChapterResponse {
+  success: Boolean!
+  message: String
+  chapter: Chapter
+}
+
+type ListChapterResponse {
+  success: Boolean!
+  message: String
+  chapters: [Chapter!]
+}
+
+type Juz {
+  id: Float
+  juz_number: Float
+}
+
+type JuzResponse {
+  success: Boolean
+  message: String
+  juzs: [Juz!]
+}
+
+type Recitation {
+  id: Float!
+  style: String
+  reciter_name_eng: String
+  reciter_name_translated: String
+}
+
+type RecitationResponse {
+  success: Boolean!
+  message: String
+  recitations: [Recitation!]
+}
+
+type Translation {
+  id: Float!
+  author_name: String
+  slug: String
+  name: String
+  language_name: String
+}
+
+type TranslationResponse {
+  success: Boolean!
+  message: String
+  translations: [Translation!]
+}
+
+type TranslatedName {
+  language_name: String
+  name: String
+}
+
+type Language {
+  id: Float!
+  name: String
+  iso_code: String
+  native_name: String
+  direction: String
+  translated_names: [TranslatedName!]
+}
+
+type LanguageResponse {
+  success: Boolean!
+  message: String
+  languages: [Language!]
+}
+
+type Tafsir {
+  id: Float!
+  author_name: String
+  slug: String
+  name: String
+  language_name: String
+}
+
+type TafsirResponse {
+  success: Boolean!
+  message: String
+  tafsirs: [Tafsir!]
+}
+
+type VerseTafsir {
+  id: Float
+  text: String
+  verse_id: Float
+  language_name: String
+  resource_name: String
+  verse_key: String
+}
+
+type VerseTafsirResponse {
+  success: Boolean!
+  message: String
+  verseTafsirs: [VerseTafsir!]
+}
+
+type VMediaContents {
+  url: String
+  embed_text: String
+  provider: String
+  author_name: String
+}
+
+type VTranslation {
+  language_name: String
+  text: String
+}
+
+type VAudio {
+  url: String
+  duration: Float
+  format: String
+  segments: [[Float!]!]
+}
+
+type WTransliteration {
+  language_name: String
+  text: String
+}
+
+type WTranslation {
+  language_name: String
+  text: String
+}
+
+type VWord {
+  id: Float
+  position: Float
+  text_madani: String
+  text_indopak: String
+  text_simple: String
+  verse_key: String
+  class_name: String
+  line_number: Float
+  code_dec: Float
+  code: String
+  char_type: String
+  translation: WTranslation
+  transliteration: WTransliteration
+}
+
+type Verse {
+  id: Float
+  verse_number: Float
+  chapter_id: Float
+  verse_key: String
+  text_madani: String
+  text_simple: String
+  text_indopak: String
+  juz_number: Float
+  hizb_number: Float
+  rub_number: Float
+  sajdah: String
+  sajdah_number: Float
+  page_number: Float
+  words: [VWord!]
+  audio: VAudio
+  translations: [VTranslation!]
+  media_contents: [VMediaContents!]
+}
+
+type MetaData {
+  current_page: Float
+  next_page: Float
+  prev_page: Float
+  total_pages: Float
+  total_count: Float
+}
+
+type VersesResponse {
+  success: Boolean
+  message: String
+  verses: [Verse!]
+  meta: MetaData
+}
+
+type SingleVerseResponse {
+  success: Boolean
+  message: String
+  verse: Verse
+}
+
+type RAudio {
+  url: String
+}
+
+type RTranslation {
+  id: Float
+  language_name: String
+  text: String
+  resource_name: String
+  resource_id: Float
+}
+
+type RTransilteration {
+  id: Float
+  language_name: String
+  text: String
+  resource_name: String
+  resource_id: Float
+}
+
+type RWord {
+  id: Float
+  position: Float
+  text_madani: String
+  text_indopak: String
+  text_simple: String
+  verse_key: String
+  class_name: String
+  line_number: Float
+  page_number: Float
+  code: String
+  code_v3: String
+  char_type: String
+  audio: RAudio
+  translation: RTranslation
+  transliteration: RTransilteration
+  highlight: String
+}
+
+type ResultUnit {
+  id: Float
+  verse_number: Float
+  chapter_id: Float
+  verse_key: String
+  text_madani: String
+  words: [RWord!]
+}
+
+type Result {
+  query: String
+  total_count: Float
+  took: Float
+  current_page: Float
+  total_pages: Float
+  per_page: Float
+  results: [ResultUnit!]
+}
+
+type SearchResponse {
+  success: Boolean!
+  message: String
+  result: Result
+}
+
+type Query {
+  getChapter(lang: String = "en", chapterId: String!): GetChapterResponse!
+  listChapters(lang: String = "en"): ListChapterResponse!
+  chapterInfo(lang: String = "en", chapterId: String!): ChapterInfoResponse!
+  getAllJuzs: JuzResponse!
+  recitations(lang: String = "en"): RecitationResponse!
+  translations(lang: String = "en"): TranslationResponse!
+  languages(lang: String = "en"): LanguageResponse!
+  tafsirs: TafsirResponse!
+  listTafsirOfVerse(verseTafsirInput: VerseTafsirInput!): VerseTafsirResponse!
+  listVerses(verseInput: VersesInput!): VersesResponse!
+  getSingleVerse(singleVerseInput: SingleVerseInput!): SingleVerseResponse!
+  search(searchInput: SearchInput!): SearchResponse!
+}
+
+input VerseTafsirInput {
+  chapter_id: Float!
+  verse_id: Float!
+
+  """ Don't sepicify this field, to list all tafsirs of the verse"""
+  tafsirs: Float
+}
+
+input VersesInput {
+  chapter_id: String!
+  recitation: String
+  translations: [String!]
+  media: [String!]
+  language: String
+  page: String
+  offset: String
+  limit: String
+  text_type: String
+}
+
+input SingleVerseInput {
+  chapter_id: Float!
+  verse_number: Float!
+}
+
+input SearchInput {
+  query: String!
+
+  """Results per page. s is also valid parameter."""
+  size: Float = 20
+
+  """Page number, well for pagination."""
+  page: Float = 0
+
+  """
+  ISO code of language, use this query params if you want to boost translations for specific language. For list of available language see listLanguages query
+  """
+  language: String
+}
