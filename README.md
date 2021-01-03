@@ -1,4 +1,4 @@
-GraphQL Layer for https://quran.api-docs.io/v3
+Quran GraphQL
 
 ## Description
 Added grapql layer for all rest apis, exposed in the  https://quran.api-docs.io/v3
