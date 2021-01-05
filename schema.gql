@@ -302,14 +302,14 @@ input VerseTafsirInput {
 }
 
 input VersesInput {
-  chapter_id: String!
+  chapter_id: Float!
   recitation: String
   translations: [String!]
   media: [String!]
   language: String
-  page: String
-  offset: String
-  limit: String
+  page: Float
+  offset: Float
+  limit: Float
   text_type: String
 }
 

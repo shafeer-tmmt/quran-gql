@@ -1,18 +1,24 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { BASE_URL } from 'src/constants';
 import { Recitation, RecitationResponse } from './dto/recitation.dto';
 import { TranslationResponse, Translation } from './dto/translation.dto';
 import { Language, LanguageResponse } from './dto/language.dto';
 import { Tafsir, TafsirResponse } from './dto/tafsir.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OptionService {
-  constructor(private readonly httpService: HttpService) {}
+  baseUrl: string = '';
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService,
+  ) {
+    this.baseUrl = this.configService.get('SOURCE_URL');
+  }
 
   async listRecitations(language: string): Promise<RecitationResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}options/recitations?language=${language}`)
+        .get(`${this.baseUrl}options/recitations?language=${language}`)
         .toPromise();
       if (data.recitations) {
         const recitations: Recitation[] = data.recitations as Recitation[];
@@ -27,7 +33,7 @@ export class OptionService {
   async listTranstions(language: string): Promise<TranslationResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}options/translations?language=${language}`)
+        .get(`${this.baseUrl}options/translations?language=${language}`)
         .toPromise();
       if (data.translations) {
         const translations: Translation[] = data.translations as Translation[];
@@ -42,7 +48,7 @@ export class OptionService {
   async listLanguages(language: string): Promise<LanguageResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}options/languages?language=${language}`)
+        .get(`${this.baseUrl}options/languages?language=${language}`)
         .toPromise();
       if (data.languages) {
         const languages: Language[] = data.languages as Language[];
@@ -57,7 +63,7 @@ export class OptionService {
   async listTafsirs(): Promise<TafsirResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}options/tafsirs`)
+        .get(`${this.baseUrl}options/tafsirs`)
         .toPromise();
       if (data.tafsirs) {
         const tafsirs: Tafsir[] = data.tafsirs as Tafsir[];

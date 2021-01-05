@@ -1,16 +1,20 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { BASE_URL } from 'src/constants';
+import { ConfigService } from '@nestjs/config';
 import { SearchInput } from './dto/search-input.dto';
 import { Result, SearchResponse } from './dto/search.dto';
 
 @Injectable()
 export class SearchService {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService,
+  ) {}
 
   async search(input: SearchInput): Promise<SearchResponse> {
     try {
+      const baseUrl = this.configService.get('SOURCE_URL');
       const { data } = await this.httpService
-        .get(`${BASE_URL}search`, {
+        .get(`${baseUrl}search`, {
           params: this.buildFilterQuery(input),
         })
         .toPromise();

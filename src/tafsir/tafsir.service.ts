@@ -1,11 +1,17 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { BASE_URL } from 'src/constants';
+import { ConfigService } from '@nestjs/config';
 import { VerseTafsirInput } from './dto/vers-tafsir-input.dto';
 import { VerseTafsir, VerseTafsirResponse } from './dto/verse-tafir.dto';
 
 @Injectable()
 export class TafsirService {
-  constructor(private httpService: HttpService) {}
+  baseUrl: string = '';
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService,
+  ) {
+    this.baseUrl = this.configService.get('SOURCE_URL');
+  }
 
   async listTafsirsOfaVerse(
     input: VerseTafsirInput,
@@ -13,7 +19,7 @@ export class TafsirService {
     try {
       const { data } = await this.httpService
         .get(
-          `${BASE_URL}chapters/${input.chapter_id}/verses/${input.verse_id}/tafsirs`,
+          `${this.baseUrl}chapters/${input.chapter_id}/verses/${input.verse_id}/tafsirs`,
           {
             params: this.buildFilterQuery(input),
           },

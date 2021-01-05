@@ -1,14 +1,20 @@
 import { HttpModuleOptions, HttpService, Injectable } from '@nestjs/common';
-import { BASE_URL } from 'src/constants';
 import { Chapter } from './dto/chapter.dto';
 import { GetChapterResponse } from './dto/get-chapter-response.dto';
 import { ListChapterResponse } from './dto/list-chapter-response.dto';
 import { ChapterInfo } from './dto/chapter-info.dto';
 import { ChapterInfoResponse } from './dto/chapter-info-response.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ChapterService {
-  constructor(private readonly httpService: HttpService) {}
+  baseUrl: string;
+  constructor(
+    private configService: ConfigService,
+    private httpService: HttpService,
+  ) {
+    this.baseUrl = this.configService.get('SOURCE_URL');
+  }
 
   async getChapter(
     chapterId: string,
@@ -16,7 +22,7 @@ export class ChapterService {
   ): Promise<GetChapterResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}chapters/${chapterId}?language=${language}`)
+        .get(`${this.baseUrl}chapters/${chapterId}?language=${language}`)
         .toPromise();
       if (data.chapter) {
         const chapter: Chapter = data.chapter as Chapter;
@@ -31,7 +37,7 @@ export class ChapterService {
   async listChapters(language: string): Promise<ListChapterResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}chapters?language=${language}`)
+        .get(`${this.baseUrl}chapters?language=${language}`)
         .toPromise();
       if (data.chapters) {
         const chapters: Chapter[] = data.chapters as Chapter[];
@@ -49,7 +55,7 @@ export class ChapterService {
   ): Promise<ChapterInfoResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}chapters/${chapterId}/info?language=${language}`)
+        .get(`${this.baseUrl}chapters/${chapterId}/info?language=${language}`)
         .toPromise();
       if (data.chapter_info) {
         const chapterInfo: ChapterInfo = data.chapter_info as ChapterInfo;

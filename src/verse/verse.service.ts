@@ -1,6 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { BASE_URL } from 'src/constants';
 import { SingleVerseInput, VersesInput } from './dto/verse-input.dto';
+import { ConfigService } from '@nestjs/config';
 import {
   Verse,
   VersesResponse,
@@ -10,12 +10,18 @@ import {
 
 @Injectable()
 export class VerseService {
-  constructor(private httpService: HttpService) {}
+  baseUrl: string = '';
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService,
+  ) {
+    this.baseUrl = this.configService.get('SOURCE_URL');
+  }
 
   async listVerses(verseInput: VersesInput): Promise<VersesResponse> {
     try {
       const { data } = await this.httpService
-        .get(`${BASE_URL}chapters/${verseInput.chapter_id}/verses?`, {
+        .get(`${this.baseUrl}chapters/${verseInput.chapter_id}/verses?`, {
           params: this.buildFilterQuery(verseInput),
         })
         .toPromise();
@@ -36,7 +42,7 @@ export class VerseService {
     try {
       const { data } = await this.httpService
         .get(
-          `${BASE_URL}chapters/${verseInput.chapter_id}/verses/${verseInput.verse_number}`,
+          `${this.baseUrl}chapters/${verseInput.chapter_id}/verses/${verseInput.verse_number}`,
         )
         .toPromise();
       if (data.verse) {
@@ -79,9 +85,9 @@ export class VerseService {
     }
 
     if (language) params.append('language', language);
-    if (page) params.append('page', page);
-    if (offset) params.append('offset', offset);
-    if (limit) params.append('limit', limit);
+    if (page) params.append('page', `${page}`);
+    if (offset) params.append('offset', `${offset}`);
+    if (limit) params.append('limit', `${limit}`);
     if (text_type) params.append('text_type', text_type);
     return params;
   }

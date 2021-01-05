@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class VersesInput {
   @Field()
-  chapter_id: string;
+  chapter_id?: number;
 
   @Field({ nullable: true })
   recitation?: string;
@@ -18,20 +18,20 @@ export class VersesInput {
   language?: string;
 
   @Field({ nullable: true })
-  page?: string;
+  page?: number;
 
   @Field({ nullable: true })
-  offset?: string;
+  offset?: number;
 
   @Field({ nullable: true })
-  limit?: string;
+  limit?: number;
 
   @Field({ nullable: true })
   text_type?: string;
 }
 
 @InputType()
-export class SingleVerseInput{
+export class SingleVerseInput {
   @Field()
   chapter_id: number;
 
