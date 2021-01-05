@@ -9,6 +9,7 @@ async function bootstrap() {
   logger.log('With the name of ALLAH');
   logger.log('All praise is to ALLAH');
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const configService = app.get<ConfigService>(ConfigService);
   console.log(configService.get<number>('PORT'));
   await app.listen(configService.get<number>('PORT')).then(() => {
