@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Set project folder as current directory"
-cd "quran-gql"
+cd "$(dirname "$0")"
 
 echo "Stash the un committed files"
 git stash save "tbd"
