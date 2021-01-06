@@ -1,11 +1,7 @@
 # لا حول ولا قوّة الا با لله
-name: Excecute ssh command in remote server
-on:
-  push:
-    branches:
-      - master
-      
-
+name: Build and Deploy server
+on: workflow_dispatch
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
