@@ -1,7 +1,10 @@
 # لا حول ولا قوّة الا با لله
-name: Build and Deploy server
-on: workflow_dispatch
-    
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
