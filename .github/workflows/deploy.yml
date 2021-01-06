@@ -17,5 +17,13 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script: sudo sh /home/ubuntu/quran-gql/starter.sh 
+        script: |
+          cd ${{ secrets.PROJECT_PATH }}
+          git stash save "tbd"
+          git pull origin master
+          sudo pm2 stop "Quran-gql"
+          sudo pm2 delete "Quran-gql"
+          npm install
+          npm run build
+          sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
 
