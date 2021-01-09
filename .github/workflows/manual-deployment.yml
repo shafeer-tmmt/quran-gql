@@ -10,9 +10,9 @@ jobs:
   deploy-with-ssh:
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy
-      uses: appleboy/ssh-action@v0.1.4
     - if: github.event.inputs.isNpmInstallNeeded == 'true'
+    - name: Deploy with npm install
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -29,6 +29,8 @@ jobs:
           npm run build
           sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
     - if: github.event.inputs.isNpmInstallNeeded == 'false'
+    - name: Deploy without npm install
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
