@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   deploy:
@@ -23,7 +23,7 @@ jobs:
           git pull origin master
           sudo pm2 stop "Quran-gql"
           sudo pm2 delete "Quran-gql"
-          npm install
+          npm ci
           npm run build
           sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
 
