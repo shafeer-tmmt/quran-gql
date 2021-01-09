@@ -4,44 +4,45 @@ on:
     inputs:
       isNpmInstallNeeded:
         description: 'Should install npm?'     
-        required: false
-        default: 'warning'
+        required: true
+        default: 'false'
 jobs:
-  deploy-with-ssh:
+  deploy-with-npm-install:
     runs-on: ubuntu-latest
     steps:
-    - if: github.event.inputs.isNpmInstallNeeded == 'true'
-    - name: Deploy with npm install
-      uses: appleboy/ssh-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        timeout: 12m
-        script: |
-          cd ${{ secrets.PROJECT_PATH }}
-          git stash save "tbd"
-          git pull origin master
-          sudo pm2 stop "Quran-gql"
-          sudo pm2 delete "Quran-gql"
-          npm ci
-          npm run build
-          sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
-    - if: github.event.inputs.isNpmInstallNeeded == 'false'
-    - name: Deploy without npm install
-      uses: appleboy/ssh-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        timeout: 12m
-        script: |
-          cd ${{ secrets.PROJECT_PATH }}
-          git stash save "tbd"
-          git pull origin master
-          sudo pm2 stop "Quran-gql"
-          sudo pm2 delete "Quran-gql"
-          npm run build
-          sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
+      - name: deploy with npm install
+        if: github.event.inputs.isNpmInstallNeeded == 'true'
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          timeout: 12m
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git stash save "tbd"
+            git pull origin master
+            sudo pm2 stop "Quran-gql"
+            sudo pm2 delete "Quran-gql"
+            npm ci
+            npm run build
+            sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
+
+      - name: deploy without npm install
+        if: github.event.inputs.isNpmInstallNeeded == 'false'
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          timeout: 12m
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git stash save "tbd"
+            git pull origin master
+            sudo pm2 stop "Quran-gql"
+            sudo pm2 delete "Quran-gql"
+            npm run build
+            sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
