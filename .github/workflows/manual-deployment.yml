@@ -1,0 +1,45 @@
+name: Semi automated Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      isNpmInstallNeeded:
+        description: 'Should install npm?'     
+        required: false
+        default: 'warning'
+jobs:
+  deploy-with-ssh:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@v0.1.4
+    - if: github.event.inputs.isNpmInstallNeeded == 'true'
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        timeout: 12m
+        script: |
+          cd ${{ secrets.PROJECT_PATH }}
+          git stash save "tbd"
+          git pull origin master
+          sudo pm2 stop "Quran-gql"
+          sudo pm2 delete "Quran-gql"
+          npm ci
+          npm run build
+          sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
+    - if: github.event.inputs.isNpmInstallNeeded == 'false'
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        timeout: 12m
+        script: |
+          cd ${{ secrets.PROJECT_PATH }}
+          git stash save "tbd"
+          git pull origin master
+          sudo pm2 stop "Quran-gql"
+          sudo pm2 delete "Quran-gql"
+          npm run build
+          sudo pm2 start npm --no-automation --name Quran-gql -- run "start:prod"
